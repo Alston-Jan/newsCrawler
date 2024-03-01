@@ -26,9 +26,9 @@ def get_all_news(url:str):
 if __name__ == "__main__":
     categories=getCategories()
     news=[]
-    for i in len(categories):
-        print(f'{i}: {categories[i]}')
-    select=input("please enter the type of news: ")
+    for i in range(len(categories)):
+        print(f'{i}: {categories[i].text}')
+    select=int(input("please enter the type of news: "))
     allNews=get_all_news(categories[select].get('href'))
     for news in allNews:
         
