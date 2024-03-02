@@ -13,20 +13,20 @@ def crawl_ltn_news(url):
     # 獲取新聞標題
     news_title = soup.find('h1')
     
-    print (news_title.text)
+    print (f'title: {news_title.text}')
     
     # 獲取新聞內容
     contents=soup.find(class_="text").find_all('p')
     
-    # # 將頁尾廣告移除
-    # contents.pop(-1)
-    # contents.pop(-1)
-    
     
     # 印出所有內容
     for content in contents:
-        # print(news_title.text)
+        if("請繼續往下閱讀..." in content.text):
+            continue
+        if("下載APP" in content.text):
+            continue
         print(content.text)
+    print("========================================")
     
 if __name__ == "__main__":
     

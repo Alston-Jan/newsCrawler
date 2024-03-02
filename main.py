@@ -18,21 +18,17 @@ def get_all_news(url:str):
     html = BeautifulSoup(response.text, 'html.parser')
     news = html.find(class_='list').find_all(class_='tit')
     return news
-    # print(categories)
-    # for i in categories:
-    #     print(i.get('href'))
-    #     print(i.text)
 
 if __name__ == "__main__":
     categories=getCategories()
     news=[]
     for i in range(len(categories)):
         print(f'{i}: {categories[i].text}')
+    
     select=int(input("please enter the type of news: "))
-    allNews=get_all_news(categories[select].get('href'))
-    for news in allNews:
-        
-        # print(news.text)
-        # print(news.get('href'))
-        crawl_ltn_news(news.get("href"))
-        
+    try:
+        allNews=get_all_news(categories[select].get('href'))
+        for news in allNews:
+            crawl_ltn_news(news.get("href"))
+    except AttributeError:
+        print(select)        
