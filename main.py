@@ -17,6 +17,8 @@ def get_all_news(url:str):
     response = requests.get(url)
     html = BeautifulSoup(response.text, 'html.parser')
     news = html.find(class_='list').find_all(class_='tit')
+    # news = html.select('[href]')
+    # print(news)
     return news
 
 if __name__ == "__main__":
@@ -31,4 +33,4 @@ if __name__ == "__main__":
         for news in allNews:
             crawl_ltn_news(news.get("href"))
     except AttributeError:
-        print(select)        
+        print(f"{select} {categories[select]}: format not support")        
