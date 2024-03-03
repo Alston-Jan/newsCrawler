@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import requests
 import argparse
+import json
 
 import re
 def findAuthor(inputString):
@@ -21,6 +22,8 @@ def findAuthor(inputString):
 
 
 def crawl_ltn_news(url):
+
+    returnJson={}
     # 發送GET請求並取得響應
     print(url)
     response = requests.get(url)
@@ -33,26 +36,50 @@ def crawl_ltn_news(url):
     for title in all_h1:
         if title.text != "":
             print (f'{title.text}')
+
+            # if json file value don't want title
+            # just commit this line
+            returnJson[title.text]=[title.text]
+            
             break
     print("***********************")
     # 獲取新聞內容
     contents=soup.find(class_='text').find_all('p')
+    time = soup.find(class_="time")
+    print(time.text.strip())
+    returnJson[title.text].append(time.text.strip())
     # contents=soup.find_all('p')
     
     # findAuthor(contents[0])
 
     
     # 印出所有內容
+    text=""
     for content in contents:
+
+        # remove garbage text
         if("請繼續往下閱讀..." in content.text):
+            # print(contents.index(content))
+            contents.remove(content)
             continue
         if("下載APP" in content.text):
+            # print(contents.index(content))
+            contents.remove(content)
             continue
         if("自由時報版權所有不得轉載" in content.text):
+            # print(contents.index(content))
+            contents.remove(content)
             continue
-
-        print(content.text)
+        # print(content.text)
+        text+=content.text
+    returnJson[title.text].append(text)
+    print(returnJson)
     print("========================================")
+    with open("news.json","w+",encoding='utf8') as f:
+        # json.dumps(returnJson,f,ensure_ascii=False)
+        json.dump(returnJson,f,ensure_ascii=False)
+
+
     
 if __name__ == "__main__":
     

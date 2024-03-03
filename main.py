@@ -24,13 +24,24 @@ def get_all_news(url:str):
 if __name__ == "__main__":
     categories=getCategories()
     news=[]
+
+
+    #print all types of news
     for i in range(len(categories)):
         print(f'{i}: {categories[i].text}')
     
+    # select news by number
     select=int(input("please enter the type of news: "))
+
+
     try:
         allNews=get_all_news(categories[select].get('href'))
-        for news in allNews:
-            crawl_ltn_news(news.get("href"))
+
+        #display all news in the selected type
+        for i in range(len(allNews)):
+            print(f"{i} {allNews[i].text}")
+
+        news=allNews[int(input("please select the news: "))]
+        crawl_ltn_news(news.get('href'))
     except AttributeError:
         print(f"{select} {categories[select]}: format not support")        
