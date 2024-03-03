@@ -77,7 +77,7 @@ def crawl_ltn_news(url):
     print("========================================")
     with open("news.json","w+",encoding='utf8') as f:
         # json.dumps(returnJson,f,ensure_ascii=False)
-        json.dump(returnJson,f,ensure_ascii=False)
+        json.dump(returnJson,f,ensure_ascii=False,indent=4)
 
 
     
