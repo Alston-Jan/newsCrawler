@@ -21,9 +21,9 @@ def findAuthor(inputString):
 
 
 
-def crawl_ltn_news(url):
+def crawl_ltn_news(url,returnJson):
 
-    returnJson={}
+    # returnJson={}
     # 發送GET請求並取得響應
     print(url)
     response = requests.get(url)
@@ -73,11 +73,11 @@ def crawl_ltn_news(url):
         # print(content.text)
         text+=content.text
     returnJson[title.text].append(text)
-    print(returnJson)
+    # print(returnJson)
     print("========================================")
-    with open("news.json","w+",encoding='utf8') as f:
-        # json.dumps(returnJson,f,ensure_ascii=False)
-        json.dump(returnJson,f,ensure_ascii=False,indent=4)
+    # with open("news.json","w+",encoding='utf8') as f:
+    #     # json.dumps(returnJson,f,ensure_ascii=False)
+    #     json.dump(returnJson,f,ensure_ascii=False,indent=4)
 
 
     

@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from crawlNews import crawl_ltn_news
+import json
 
 def getCategories():
     url='https://www.ltn.com.tw/'
@@ -16,32 +17,29 @@ def getCategories():
 def get_all_news(url:str):
     response = requests.get(url)
     html = BeautifulSoup(response.text, 'html.parser')
-    news = html.find(class_='list').find_all(class_='tit')
+    news = html.find(class_='list').find_all(class_='tit',limit=3)
     # news = html.select('[href]')
     # print(news)
     return news
 
 if __name__ == "__main__":
     categories=getCategories()
+    newsJson={}
     news=[]
 
 
     #print all types of news
     for i in range(len(categories)):
-        print(f'{i}: {categories[i].text}')
-    
-    # select news by number
-    select=int(input("please enter the type of news: "))
-
-
-    try:
-        allNews=get_all_news(categories[select].get('href'))
+        try:
+            print(f'{i}: {categories[i].text}')
+            allNews=get_all_news(categories[i].get('href'))
 
         #display all news in the selected type
-        for i in range(len(allNews)):
-            print(f"{i} {allNews[i].text}")
+            for i in range(len(allNews)):
+                print(f"{i} {allNews[i].text}")
+                crawl_ltn_news(allNews[i].get('href'),newsJson)
 
-        news=allNews[int(input("please select the news: "))]
-        crawl_ltn_news(news.get('href'))
-    except AttributeError:
-        print(f"{select} {categories[select]}: format not support")        
+        except AttributeError:
+            print(f"{i} {categories[i].get('href')} {categories[i].text}: format not support")        
+    with open("output.json","w+",encoding="utf8") as f:
+        json.dump(newsJson,f,ensure_ascii=False,indent=4)
