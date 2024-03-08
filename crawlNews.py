@@ -6,17 +6,23 @@ import json
 
 import re
 def findAuthor(inputString):
-    inputString = "這是一個[搜尋這裡]的範例字串"
-
+    # inputString = "這是一個[搜尋這裡]的範例字串"
+    # print(inputString)
+    beg = inputString.find("〔")
+    end = inputString.find("／")
+    # print(beg ,end)
+    author=inputString[beg+3:end]
+    
     # 使用正規表達式搜尋 [ ] 中的子字串
-    match = re.search(r'〔(.*?)〕', inputString)
+    # author = re.search(r'記者(.*?)／', inputString)
 
-    if match:
-        result = match.group(1)
-        print("找到的子字串:", result)
+    if author:
+        # result = match.group(1)
+        # print("找到的子字串:", result)
+        return author
     else:
         # print("未找到符合的子字串")
-        pass
+        return ""
 
 
 
@@ -39,7 +45,7 @@ def crawl_ltn_news(url,returnJson):
 
             # if json file value don't want title
             # just commit this line
-            returnJson[title.text]=[title.text]
+            returnJson["title"]=title.text
             
             break
     print("***********************")
@@ -47,10 +53,12 @@ def crawl_ltn_news(url,returnJson):
     contents=soup.find(class_='text').find_all('p')
     time = soup.find(class_="time")
     print(time.text.strip())
-    returnJson[title.text].append(time.text.strip())
+    returnJson["createDatetime"]=time.text.strip()
     # contents=soup.find_all('p')
-    
-    # findAuthor(contents[0])
+    # try:
+    #     findAuthor(contents[1].text)
+    # except IndexError:
+    #     pass
 
     
     # 印出所有內容
@@ -72,12 +80,18 @@ def crawl_ltn_news(url,returnJson):
             continue
         # print(content.text)
         text+=content.text
-    returnJson[title.text].append(text)
+    author=findAuthor(text)
+    print(author)
+    if(author):
+        returnJson["author"]=author
+    else:
+        returnJson["author"]=' '
+        
+    returnJson["source"]='自由時報'
+    returnJson["content"]=text
     # print(returnJson)
     print("========================================")
-    # with open("news.json","w+",encoding='utf8') as f:
-    #     # json.dumps(returnJson,f,ensure_ascii=False)
-    #     json.dump(returnJson,f,ensure_ascii=False,indent=4)
+
 
 
     
@@ -91,4 +105,5 @@ if __name__ == "__main__":
     
     url = args.url
     # 調用爬蟲函數
-    crawl_ltn_news(url)
+    jsonDict={}
+    crawl_ltn_news(url, jsonDict)

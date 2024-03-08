@@ -24,7 +24,6 @@ def get_all_news(url:str):
 
 if __name__ == "__main__":
     categories=getCategories()
-    newsJson={}
     news=[]
 
 
@@ -36,10 +35,12 @@ if __name__ == "__main__":
 
         #display all news in the selected type
             for i in range(len(allNews)):
+                newsJson={}
                 print(f"{i} {allNews[i].text}")
                 crawl_ltn_news(allNews[i].get('href'),newsJson)
+                news.append(newsJson)
 
         except AttributeError:
             print(f"{i} {categories[i].get('href')} {categories[i].text}: format not support")        
     with open("output.json","w+",encoding="utf8") as f:
-        json.dump(newsJson,f,ensure_ascii=False,indent=4)
+        json.dump(news,f,ensure_ascii=False,indent=4)
